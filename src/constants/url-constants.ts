@@ -4,4 +4,6 @@ export const GET_INCIDENTS_BY_USER = "api/incidents";
 
 export const USER_LOGIN = "api/users/login";
 
-export const SUBMIT_INCIDENT = "api/incidents"
+export const SUBMIT_INCIDENT = "api/incidents";
+
+export const FETCH_ROUTES = "api/directions";

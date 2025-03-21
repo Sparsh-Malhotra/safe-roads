@@ -1,13 +1,22 @@
 import { API_BASE_URL } from "./baseService";
-import { GET_INCIDENTS, GET_INCIDENTS_BY_USER, SUBMIT_INCIDENT, USER_LOGIN } from "../constants/url-constants";
+import {
+    FETCH_ROUTES,
+    GET_INCIDENTS,
+    GET_INCIDENTS_BY_USER,
+    SUBMIT_INCIDENT,
+    USER_LOGIN,
+} from "../constants/url-constants";
 import { getAuthToken } from "@/utils/auth";
 
-const fetchIncidents = async (lat,lang) => {
-    const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS}?lat=${lat}&lang=${lang}`, {
-        headers: {
-            "Authorization": `Bearer ${getAuthToken()}`
+const fetchIncidents = async (lat, lang) => {
+    const response = await fetch(
+        `${API_BASE_URL}/${GET_INCIDENTS}?lat=${lat}&lang=${lang}`,
+        {
+            headers: {
+                Authorization: `Bearer ${getAuthToken()}`,
+            },
         }
-    });
+    );
     if (!response.ok) {
         throw new Error("Failed to fetch incidents");
     }
@@ -17,15 +26,14 @@ const fetchIncidents = async (lat,lang) => {
 const fetchIncidentsByUser = async () => {
     const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS_BY_USER}`, {
         headers: {
-            "Authorization": `Bearer ${getAuthToken()}`
-        }
+            Authorization: `Bearer ${getAuthToken()}`,
+        },
     });
     if (!response.ok) {
         throw new Error("Failed to fetch user incidents");
     }
     return response.json();
 };
-
 
 const userLogin = async (credentials) => {
     const response = await fetch(`${API_BASE_URL}/${USER_LOGIN}`, {
@@ -60,17 +68,49 @@ const userLogin = async (credentials) => {
 
 const submitIncident = async (formData) => {
     const response = await fetch(`${API_BASE_URL}/${SUBMIT_INCIDENT}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            "Authorization": `Bearer ${getAuthToken()}`
+            Authorization: `Bearer ${getAuthToken()}`,
         },
         body: formData,
-      });
+    });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit issue');
-      }
-      return response.json();
-}
+    if (!response.ok) {
+        throw new Error("Failed to submit issue");
+    }
+    return response.json();
+};
 
-export { fetchIncidents, userLogin,submitIncident, fetchIncidentsByUser };
+export const fetchRoutes = async (
+    startLat: number,
+    startLng: number,
+    endLat: number,
+    endLng: number
+) => {
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/${FETCH_ROUTES}?startLat=${startLat}&startLng=${startLng}&endLat=${endLat}&endLng=${endLng}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${getAuthToken()}`,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => null);
+            throw new Error(
+                errorData?.message ||
+                    `Failed to fetch routes with status ${response.status}`
+            );
+        }
+
+        const data = await response.json();
+        return data.routes || [];
+    } catch (error) {
+        console.error("Error fetching routes:", error);
+        throw error;
+    }
+};
+
+export { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser };
