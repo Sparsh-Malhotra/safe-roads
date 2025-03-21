@@ -3,7 +3,6 @@ import { GET_INCIDENTS, GET_INCIDENTS_BY_USER, SUBMIT_INCIDENT, USER_LOGIN } fro
 import { getAuthToken } from "@/utils/auth";
 
 const fetchIncidents = async (lat,lang) => {
-    console.log("calling");
     const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS}?lat=${lat}&lang=${lang}`, {
         headers: {
             "Authorization": `Bearer ${getAuthToken()}`
