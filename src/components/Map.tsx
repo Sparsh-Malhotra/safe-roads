@@ -7,8 +7,9 @@ import "leaflet/dist/leaflet.css";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
 import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+import { useIncidents } from "@/services/hooks";
+import Incidents from "./Incidents";
 
-// Set default icon paths for Leaflet
 delete (Icon.Default.prototype as any)._getIconUrl;
 Icon.Default.mergeOptions({
     iconRetinaUrl,
@@ -18,11 +19,18 @@ Icon.Default.mergeOptions({
 
 let globalMapRef: L.Map | null = null;
 
-const Map = ({ className }) => {
+const Map = ({ className, showIssues = true }) => {
     const [userLocation, setUserLocation] = useState<[number, number] | null>(
         null
     );
-    const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  
+  const {
+    data: incidents,
+    isLoading,
+    isError,
+    error
+  } = useIncidents();
 
     useEffect(() => {
         const loadMap = async () => {
@@ -63,6 +71,13 @@ const Map = ({ className }) => {
                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                     <SetViewOnLocation coords={userLocation} />
                     <Marker position={userLocation} />
+
+                    {incidents && incidents.data &&  (
+                        <Incidents
+                            reports={incidents.data}
+                            visible={showIssues}
+                        />
+                    )}
                 </MapContainer>
             )}
         </div>
