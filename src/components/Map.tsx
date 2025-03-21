@@ -26,7 +26,10 @@ const Map = ({ className, showIssues = false }) => {
     );
     const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-    const { data: incidents } = useIncidents();
+    const { data: incidents } = useIncidents(
+        userLocation?.[0],
+        userLocation?.[1]
+    );
 
     useEffect(() => {
         const loadMap = async () => {
