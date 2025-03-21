@@ -4,10 +4,11 @@ import { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser } from 
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
-export function useIncidents() {
+export function useIncidents(lat,lng) {
     return useQuery({
-        queryKey: [INCIDENTS_QUERY_KEY],
-        queryFn: fetchIncidents,
+        queryKey: [INCIDENTS_QUERY_KEY,lat, lng],
+        enabled: !!lat && !!lng,
+        queryFn: () => fetchIncidents(lat,lng),
         staleTime: 30 * 1000, // 30 seconds
         gcTime: 5 * 60 * 1000, // 5 minutes
     });
