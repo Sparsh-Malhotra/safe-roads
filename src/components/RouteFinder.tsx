@@ -31,6 +31,7 @@ const RouteFinder = ({ onPointsSelected, className }) => {
 
   const handleFindRoute = () => {
     if (startPoint && endPoint) {
+      setExpanded(false);
       onPointsSelected(startPoint, endPoint);
       toast.info('Finding the safest route for you...');
     } else {

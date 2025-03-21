@@ -4,6 +4,7 @@ import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { toast } from "sonner";
 
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -11,6 +12,10 @@ import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { useIncidents } from "@/services/hooks";
 import Incidents from "./Incidents";
 import RouteFinder from "./RouteFinder";
+import RouteDisplay from "./RouteDisplay";
+import NavigationBar from "./NavigationBar";
+import { ROUTES } from "@/mock-data";
+
 
 delete (Icon.Default.prototype as any)._getIconUrl;
 Icon.Default.mergeOptions({
@@ -22,10 +27,11 @@ Icon.Default.mergeOptions({
 let globalMapRef: L.Map | null = null;
 
 const Map = ({ className, showIssues = false }) => {
-    const [userLocation, setUserLocation] = useState<[number, number] | null>(
-        null
-    );
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const [routes, setRoutes] = useState([]);
+    const [selectedRouteIndex, setSelectedRouteIndex] = useState<number | null>(null);
+    const [showNavigationBar, setShowNavigationBar] = useState(false);
 
     const { data: incidents } = useIncidents(
         userLocation?.[0],
@@ -50,6 +56,71 @@ const Map = ({ className, showIssues = false }) => {
         loadMap();
     }, []);
 
+    const handleRouteSelection = (route, index) => {
+        setSelectedRouteIndex(index);
+        setShowNavigationBar(true);
+    };
+
+    const handleStartNavigation = () => {
+        if (selectedRouteIndex === null || !routes[selectedRouteIndex]) {
+            toast.error("No route selected");
+            return;
+        }
+        
+        const selectedRoute = routes[selectedRouteIndex];
+        
+        if (selectedRoute.steps && selectedRoute.steps.length > 0) {
+            const firstStep = selectedRoute.steps[0];
+            const lastStep = selectedRoute.steps[selectedRoute.steps.length - 1];
+            
+            const origin = `${firstStep.startLocation.lat},${firstStep.startLocation.lng}`;
+            const destination = `${lastStep.endLocation.lat},${lastStep.endLocation.lng}`;
+            
+            const allWaypoints = [];
+
+            for (let i = 0; i < selectedRoute.steps.length - 1; i++) {
+                const step = selectedRoute.steps[i];
+                allWaypoints.push(`${step.endLocation.lat},${step.endLocation.lng}`);
+            }
+            
+            let waypoints = allWaypoints;
+            if (allWaypoints.length > 10) {
+                const waypointCount = 10;
+                waypoints = [];
+                
+                for (let i = 0; i < waypointCount; i++) {
+                    const index = Math.floor((i * allWaypoints.length) / waypointCount);
+                    waypoints.push(allWaypoints[index]);
+                }
+            }
+            
+            const waypointsString = waypoints.join('|');
+            
+            let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+            
+            if (waypointsString) {
+                mapsUrl += `&waypoints=${waypointsString}`;
+            }
+            
+            mapsUrl += '&travelmode=driving';
+            
+            window.open(mapsUrl, '_blank');
+            
+            toast.success("Opening Google Maps navigation");
+        } else {
+            toast.error("Could not create navigation route");
+        }
+    };
+
+    const handleFindRoute = (startPoint, endPoint) => {        
+        setRoutes(ROUTES);
+        setSelectedRouteIndex(0);
+        setShowNavigationBar(true);
+        
+        
+        toast.success("Routes found! Select the best route for you.");
+    };
+
     return (
         <div className={`relative ${className}`}>
             {!isMapLoaded && (
@@ -62,7 +133,9 @@ const Map = ({ className, showIssues = false }) => {
                     </div>
                 </div>
             )}
-            <RouteFinder onPointsSelected={console.log} className="" />
+            
+            <RouteFinder onPointsSelected={handleFindRoute} className="" />
+            
             {userLocation && (
                 <MapContainer
                     // @ts-expect-error todo
@@ -74,6 +147,14 @@ const Map = ({ className, showIssues = false }) => {
                     <SetViewOnLocation coords={userLocation} />
                     <Marker position={userLocation} />
 
+                    {routes.length > 0 && (
+                        <RouteDisplay 
+                            routes={routes} 
+                            onRouteSelect={handleRouteSelection}
+                            selectedRouteIndex={selectedRouteIndex}
+                        />
+                    )}
+
                     {incidents && incidents.data && (
                         <Incidents
                             reports={incidents.data}
@@ -81,6 +162,13 @@ const Map = ({ className, showIssues = false }) => {
                         />
                     )}
                 </MapContainer>
+            )}
+            
+            {showNavigationBar && selectedRouteIndex !== null && (
+                <NavigationBar 
+                    route={routes[selectedRouteIndex]} 
+                    onStartNavigation={handleStartNavigation}
+                />
             )}
         </div>
     );
