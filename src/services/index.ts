@@ -1,9 +1,9 @@
 import { API_BASE_URL } from "./baseService";
-import { GET_INCIDENTS, USER_LOGIN, GET_INCIDENTS_BY_USER } from "../constants/url-constants";
+import { GET_INCIDENTS, GET_INCIDENTS_BY_USER, SUBMIT_INCIDENT, USER_LOGIN } from "../constants/url-constants";
 import { getAuthToken } from "@/utils/auth";
 
-const fetchIncidents = async () => {
-    const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS}`, {
+const fetchIncidents = async (lat,lang) => {
+    const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS}?lat=${lat}&lang=${lang}`, {
         headers: {
             "Authorization": `Bearer ${getAuthToken()}`
         }
@@ -58,4 +58,19 @@ const userLogin = async (credentials) => {
     return data;
 };
 
-export { fetchIncidents, userLogin, fetchIncidentsByUser };
+const submitIncident = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/${SUBMIT_INCIDENT}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${getAuthToken()}`
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit issue');
+      }
+      return response.json();
+}
+
+export { fetchIncidents, userLogin,submitIncident, fetchIncidentsByUser };

@@ -1,13 +1,14 @@
 import { INCIDENTS_QUERY_KEY, USER_INCIDENTS_QUERY_KEY } from "@/constants/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchIncidents, userLogin, fetchIncidentsByUser } from ".";
+import { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser } from ".";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
-export function useIncidents() {
+export function useIncidents(lat,lng) {
     return useQuery({
-        queryKey: [INCIDENTS_QUERY_KEY],
-        queryFn: fetchIncidents,
+        queryKey: [INCIDENTS_QUERY_KEY,lat, lng],
+        enabled: !!lat && !!lng,
+        queryFn: () => fetchIncidents(lat,lng),
         staleTime: 30 * 1000, // 30 seconds
         gcTime: 5 * 60 * 1000, // 5 minutes
     });
@@ -41,6 +42,18 @@ export function useLogin(redirectTo?: string) {
         },
         onError: (error: Error) => {
             toast.error(error.message || "Login failed");
+        },
+    });
+}
+
+export function useSubmitIncident() {
+    return useMutation({
+        mutationFn: (formData:FormData) => submitIncident(formData),
+        onSuccess: (data) => {
+            toast.success(data.message || "Issue submit successful");
+        },
+        onError: (error: Error) => {
+            toast.error(error.message || "Failed to submit issue, try again later ");
         },
     });
 }

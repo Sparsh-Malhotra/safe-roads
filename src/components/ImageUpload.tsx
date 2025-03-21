@@ -3,8 +3,6 @@ import React, { useState, useRef } from 'react';
 import { XIcon, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const MAX_FILE_SIZE_MB = 5;
-
 interface ImageUploadProps {
   onImageSelected: (file: File) => void;
   onImageRemoved?: () => void;
@@ -20,10 +18,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isFileSizeValid = (file: File) => {
-    return file.size / (1024 * 1024) <= MAX_FILE_SIZE_MB;
-  };
-  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     
