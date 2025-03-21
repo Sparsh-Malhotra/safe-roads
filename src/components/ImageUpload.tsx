@@ -28,10 +28,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const file = e.target.files?.[0];
     
     if (file) {
-        if (!isFileSizeValid(file)) {
-            alert(`File size must be less than ${MAX_FILE_SIZE_MB}MB`);
-            return;
-          }
       onImageSelected(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -65,10 +61,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     
     const file = e.dataTransfer.files?.[0];
     if (file) {
-        if (!isFileSizeValid(file)) {
-            alert(`File size must be less than ${MAX_FILE_SIZE_MB}MB`);
-            return;
-          }
       onImageSelected(file);
       const reader = new FileReader();
       reader.onloadend = () => {

@@ -7,7 +7,6 @@ import IssueReportModal from "@/components/IssueReportModal";
 const Home = () => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const handleReportClick = () => {
-    console.log("isReportModalOpen",isReportModalOpen);
     setIsReportModalOpen(true);
   };
 

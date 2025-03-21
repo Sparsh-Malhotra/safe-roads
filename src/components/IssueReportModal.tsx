@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { MapPinIcon, XIcon, AlertTriangleIcon, LocateIcon } from 'lucide-react';
+import { MapPinIcon, XIcon, AlertTriangleIcon, LocateIcon, CrosshairIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getCurrentLocation, getAddressFromCoordinates } from '@/utils/location';
 import { Button } from './ui/button';
 import ImageUpload from './ImageUpload';
 import IssueSuccess from './IssueSuccess';
+import { useQueryClient } from '@tanstack/react-query';
+import LocationPicker from './LocationPicker';
 
 interface IssueReportModalProps {
   isOpen: boolean;
@@ -24,9 +26,12 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
   const [locationText, setLocationText] = useState('Fetching your location...');
   const [description, setDescription] = useState('');
   const [issueType, setIssueType] = useState('hazard');
-  const [, setImageFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [useCurrentLocation, setUseCurrentLocation] = useState(true);
-  
+  const queryClient = useQueryClient();
+  const isSubmitDisabled = isSubmitting || !description.trim() || !location || !imageFile;
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -65,23 +70,77 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
       setIsLoadingLocation(false);
     }
   };
+
+  const handleLocationPicked = async (pickedLocation: { lat: number; lng: number }) => {
+    setLocation(pickedLocation);
+    setIsLoadingLocation(true);
+    
+    try {
+      // Get address from picked coordinates
+      const address = await getAddressFromCoordinates(pickedLocation.lat, pickedLocation.lng);
+      setLocationText(address);
+    } catch (error) {
+      console.error("Error getting address:", error);
+      setLocationText("Custom location");
+    } finally {
+      setIsLoadingLocation(false);
+      setStep('form');
+    }
+  };
+
+  const openLocationPicker = () => {
+    setStep('location-picker');
+  };
+  
+  const cancelLocationPicker = () => {
+    setStep('form');
+  };
+  
+  const toggleLocationMode = () => {
+    setUseCurrentLocation(!useCurrentLocation);
+    if (useCurrentLocation) {
+      // Switching from current to custom
+      setLocationText("Select a location on the map");
+      setLocation(null);
+    }
+  };
  
   const handleClose = () => {
       onClose();
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!location || !description.trim() || !imageFile || !issueType) return;
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append('description', description);
+      formData.append('issueType', issueType);
+      formData.append('latitude', String(location.lat));
+      formData.append('longitude', String(location.lng));
+      formData.append('address', locationText);
+      formData.append('image', imageFile);
   
-  // Don't render anything if not open
+      setStep('success');
+    } catch (error) {
+      console.error('Submission failed:', error);
+    }
+    finally {
+        setIsSubmitting(false);
+    }
+  };
+  
+  
   if (!isOpen) return null;
   
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 animate-fade-in">
-      {/* Backdrop overlay */}
-      <div 
+     <div 
         className="absolute inset-0 bg-black/30 backdrop-blur-sm" 
         onClick={handleClose}
       />
       
-      {/* Modal container */}
       <div className={cn(
         "relative bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[90vh] shadow-modal animate-slide-up",
         "overflow-hidden flex flex-col",
@@ -108,7 +167,7 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
         {/* Modal content */}
         <div className="flex-1 overflow-y-auto p-6">
           {step === 'form' ? (
-            <form onSubmit={()=>{}} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Location display */}
               <div className="rounded-lg bg-secondary/50 p-4">
                 <div className="flex justify-between items-start mb-3">
@@ -133,15 +192,31 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
                     variant="outline"
                     size="sm"
                     className="h-8"
-                    onClick={()=>{}}
+                    onClick={useCurrentLocation ? openLocationPicker : toggleLocationMode}
                   >
-                     <>
+                    {useCurrentLocation ? (
+                      <>
+                        <CrosshairIcon className="h-4 w-4 mr-1" />
+                        Pick
+                      </>
+                    ) : (
+                      <>
                         <LocateIcon className="h-4 w-4 mr-1" />
                         Use Current
                       </>
+                    )}
                   </Button>
                 </div>
-                
+                {!useCurrentLocation && !location && (
+                  <Button
+                    type="button"
+                    className="w-full mt-2"
+                    onClick={openLocationPicker}
+                  >
+                    <CrosshairIcon className="h-4 w-4 mr-2" />
+                    Select Location on Map
+                  </Button>
+                )}
               </div>
               
               {/* Issue type selection */}
@@ -193,7 +268,7 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
               {/* Image upload */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium">
-                  Add Photo (Optional)
+                  Add Photo
                 </label>
                 <ImageUpload
                   onImageSelected={(file) => setImageFile(file)}
@@ -201,6 +276,12 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
                 />
               </div>
             </form>
+          ) : step === 'location-picker' ? (
+            <LocationPicker
+              initialLocation={location || undefined}
+              onLocationSelected={handleLocationPicked}
+              onCancel={cancelLocationPicker}
+            />
           ) : (
             <IssueSuccess onClose={handleClose} />
           )}
@@ -211,7 +292,8 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
           <div className="px-6 py-4 border-t">
             <button
               type="button"
-              disabled={!description.trim() || !location}
+              onClick={handleSubmit}
+              disabled={isSubmitDisabled}
               className={cn(
                 "w-full px-4 py-2 rounded-md font-medium transition-colors press-effect",
                 "bg-safety text-safety-foreground hover:bg-safety-hover",
@@ -219,7 +301,14 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
                 "disabled:opacity-50 disabled:pointer-events-none"
               )}
             >
-               Submit Report
+              {isSubmitting ? (
+                <span className="flex items-center justify-center space-x-2">
+                  <span className="loader !border-white/20 !border-b-white !w-4 !h-4"></span>
+                  <span>Submitting...</span>
+                </span>
+              ) : (
+                "Submit Report"
+              )}
             </button>
           </div>
         )}
