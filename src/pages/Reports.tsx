@@ -31,9 +31,9 @@ export default function UserIncidentsPage() {
         </Button>
         <h1 className="text-3xl font-bold text-center mb-6">My Reported Incidents</h1>
       </div>
-      <div className="w-full">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {userIncidents?.data?.map((incident: any) => (
-          <Card key={incident.id} className="rounded-lg mb-4 shadow-lg gap-3">
+          <Card key={incident.id} className="rounded-lg shadow-lg gap-3">
             <CardHeader>
               <CardTitle className="text-xl">
                 {ISSUE_TYPES[incident?.issue_type]?.label || incident?.issue_type}
