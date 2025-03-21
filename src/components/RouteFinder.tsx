@@ -81,7 +81,8 @@ const RouteFinder = ({ onPointsSelected, className }) => {
                   }}
                   options={{
                     types: ['geocode'],
-                    fields: ['formatted_address', 'geometry']
+                    fields: ['formatted_address', 'geometry'],
+                    componentRestrictions: { country: 'in' }
                   }}
                 />
               </div>
@@ -104,7 +105,8 @@ const RouteFinder = ({ onPointsSelected, className }) => {
                   }}
                   options={{
                     types: ['geocode'],
-                    fields: ['formatted_address', 'geometry']
+                    fields: ['formatted_address', 'geometry'],
+                    componentRestrictions: { country: 'in' }
                   }}
                 />
               </div>
