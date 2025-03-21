@@ -1,6 +1,6 @@
 import { INCIDENTS_QUERY_KEY, USER_INCIDENTS_QUERY_KEY } from "@/constants/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchIncidents, userLogin, submitIncident } from ".";
+import { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser } from ".";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
