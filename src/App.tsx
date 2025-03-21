@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
+import Reports from "./pages/Reports";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Login from "./pages/Login";
 
@@ -21,6 +22,7 @@ function App() {
               <Routes>
                   <Route path="/" element={<Login />} />
                   <Route path="/home" element={<Home />} />
+                  <Route path="/reports" element={<Reports />} />
                   <Route path="*" element={<NotFound />} />
               </Routes>
           </BrowserRouter>
