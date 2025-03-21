@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "./baseService";
-import { GET_INCIDENTS, USER_LOGIN } from "../constants/url-constants";
+import { GET_INCIDENTS, SUBMIT_INCIDENT, USER_LOGIN } from "../constants/url-constants";
 import { getAuthToken } from "@/utils/auth";
 
 const fetchIncidents = async () => {
@@ -45,4 +45,19 @@ const userLogin = async (credentials) => {
     return data;
 };
 
-export { fetchIncidents, userLogin };
+const submitIncident = async (formData) => {
+    const response = await fetch(`${API_BASE_URL}/${SUBMIT_INCIDENT}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${getAuthToken()}`
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit issue');
+      }
+      return response.json();
+}
+
+export { fetchIncidents, userLogin,submitIncident };

@@ -16,6 +16,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [open, setOpen] = useState(false);
+  const {name,email} = JSON.parse(localStorage.getItem("user_data")) || {};
 
   return (
     <header
@@ -48,9 +49,9 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
               <UserCircle2 className="w-12 h-12 text-gray-400 rounded-full" />
               <div>
                 <p className="text-sm font-medium text-gray-900">
-                  Hi, Safety Roads
+                  Hi, {name || "-"}
                 </p>
-                <p className="text-xs text-gray-500">example@email.com</p>
+                <p className="text-xs text-gray-500">{email || "-"}</p>
               </div>
             </div>
 

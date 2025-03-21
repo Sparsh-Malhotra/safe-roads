@@ -6,8 +6,9 @@ import { getCurrentLocation, getAddressFromCoordinates } from '@/utils/location'
 import { Button } from './ui/button';
 import ImageUpload from './ImageUpload';
 import IssueSuccess from './IssueSuccess';
-import { useQueryClient } from '@tanstack/react-query';
 import LocationPicker from './LocationPicker';
+import { ISSUE_TYPES } from '@/utils/issues';
+import { useSubmitIncident } from '@/services/hooks';
 
 interface IssueReportModalProps {
   isOpen: boolean;
@@ -29,8 +30,8 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [useCurrentLocation, setUseCurrentLocation] = useState(true);
-  const queryClient = useQueryClient();
   const isSubmitDisabled = isSubmitting || !description.trim() || !location || !imageFile;
+  const submitIncidentMutation = useSubmitIncident();
 
   useEffect(() => {
     if (isOpen) {
@@ -116,15 +117,17 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
     try {
       const formData = new FormData();
       formData.append('description', description);
-      formData.append('issueType', issueType);
-      formData.append('latitude', String(location.lat));
-      formData.append('longitude', String(location.lng));
-      formData.append('address', locationText);
-      formData.append('image', imageFile);
+     formData.append('issueType', issueType);
+    formData.append('lat', String(location.lat));
+    formData.append('long', String(location.lng));
+    formData.append('address', locationText);
+    formData.append('image', imageFile);
+
+    await submitIncidentMutation.mutateAsync(formData);
   
       setStep('success');
-    } catch (error) {
-      console.error('Submission failed:', error);
+    } catch (err) {
+     console.log("err",err);
     }
     finally {
         setIsSubmitting(false);
@@ -225,26 +228,21 @@ const IssueReportModal: React.FC<IssueReportModalProps> = ({
                   Issue Type
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: 'hazard', label: 'Hazard' },
-                    { id: 'lighting', label: 'Poor Lighting' },
-                    { id: 'road', label: 'Road Issue' },
-                    { id: 'traffic', label: 'Traffic' },
-                    { id: 'other', label: 'Other' }
-                  ].map((type) => (
+                  {Object.values(ISSUE_TYPES)              
+                  .map(({key,label}) => (
                     <button
-                      key={type.id}
+                      key={key}
                       type="button"
-                      onClick={() => setIssueType(type.id)}
+                      onClick={() => setIssueType(key)}
                       className={cn(
                         "py-2 px-3 rounded-md text-sm font-medium transition-colors",
                         "border focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1",
-                        issueType === type.id
+                        issueType === key
                           ? "bg-primary/10 border-primary/30 text-primary"
                           : "bg-transparent border-border hover:bg-muted"
                       )}
                     >
-                      {type.label}
+                      {label}
                     </button>
                   ))}
                 </div>
