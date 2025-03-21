@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
     )}>
       <div className="flex items-center space-x-2">
         <MapIcon className="h-5 w-5 text-primary" strokeWidth={2.5} />
-        <h1 className="text-lg font-semibold tracking-tight">Roads Untravelled</h1>
+        <h1 className="text-lg font-semibold tracking-tight">Safe Roads</h1>
       </div>
     </header>
   );
