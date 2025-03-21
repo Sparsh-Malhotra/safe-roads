@@ -10,6 +10,7 @@ import iconUrl from "leaflet/dist/images/marker-icon.png";
 import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { useIncidents } from "@/services/hooks";
 import Incidents from "./Incidents";
+import RouteFinder from "./RouteFinder";
 
 delete (Icon.Default.prototype as any)._getIconUrl;
 Icon.Default.mergeOptions({
@@ -61,6 +62,7 @@ const Map = ({ className, showIssues = false }) => {
                     </div>
                 </div>
             )}
+            <RouteFinder onPointsSelected={console.log} className="" />
             {userLocation && (
                 <MapContainer
                     // @ts-expect-error todo
