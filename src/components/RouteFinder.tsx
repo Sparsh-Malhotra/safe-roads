@@ -17,7 +17,6 @@ const RouteFinder = ({ onPointsSelected, className }) => {
       const lng = place.geometry.location.lng();
       setStartPoint([lat, lng]);
       setStartAddress(place.formatted_address || '');
-      toast.success('Start location selected');
     }
   };
 
@@ -27,7 +26,6 @@ const RouteFinder = ({ onPointsSelected, className }) => {
       const lng = place.geometry.location.lng();
       setEndPoint([lat, lng]);
       setEndAddress(place.formatted_address || '');
-      toast.success('Destination selected');
     }
   };
 
@@ -82,7 +80,7 @@ const RouteFinder = ({ onPointsSelected, className }) => {
                     fontSize: '14px'
                   }}
                   options={{
-                    types: ['address', 'geocode'],
+                    types: ['geocode'],
                     fields: ['formatted_address', 'geometry']
                   }}
                 />
@@ -105,7 +103,7 @@ const RouteFinder = ({ onPointsSelected, className }) => {
                     fontSize: '14px'
                   }}
                   options={{
-                    types: ['address', 'geocode'],
+                    types: ['geocode'],
                     fields: ['formatted_address', 'geometry']
                   }}
                 />
