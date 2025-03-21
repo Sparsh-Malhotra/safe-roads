@@ -22,7 +22,7 @@ const IncidentToggle = ({ showIssues, onToggle, className }) => {
                     <FlagOff className="h-4 w-4 text-gray-500" />
                 )}
                 <span className="ml-2 text-xs font-medium">
-                    {showIssues ? "Hide Incidents" : "Show Incidents"}
+                    Nearby Incidents
                 </span>
             </Toggle>
         </div>
