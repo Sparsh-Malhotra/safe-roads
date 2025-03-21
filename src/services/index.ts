@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "./baseService";
-import { GET_INCIDENTS, USER_LOGIN } from "../constants/url-constants";
+import { GET_INCIDENTS, USER_LOGIN, GET_INCIDENTS_BY_USER } from "../constants/url-constants";
 import { getAuthToken } from "@/utils/auth";
 
 const fetchIncidents = async () => {
@@ -13,6 +13,19 @@ const fetchIncidents = async () => {
     }
     return response.json();
 };
+
+const fetchIncidentsByUser = async () => {
+    const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS_BY_USER}`, {
+        headers: {
+            "Authorization": `Bearer ${getAuthToken()}`
+        }
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch user incidents");
+    }
+    return response.json();
+};
+
 
 const userLogin = async (credentials) => {
     const response = await fetch(`${API_BASE_URL}/${USER_LOGIN}`, {
@@ -45,4 +58,4 @@ const userLogin = async (credentials) => {
     return data;
 };
 
-export { fetchIncidents, userLogin };
+export { fetchIncidents, userLogin, fetchIncidentsByUser };

@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ISSUE_TYPES } from "@/utils/issues";
+import { useIncidentsByUser } from "@/services/hooks";
 
 const statusColorMap = {
   pending: { color: "#DBA818", bg: "#FFF8EB" },  
@@ -16,16 +16,18 @@ const getFormattedDate = (date: string) => {
 }
 
 export default function UserIncidentsPage() {
-  const [userIncidents, setUserIncidents] = useState([]);
+  const { data: userIncidents } = useIncidentsByUser();
   
   return (
     <div className="p-6 min-h-screen">
       <h1 className="text-3xl font-bold text-center mb-6">My Reported Incidents</h1>
       <div className="w-full">
-        {userIncidents.map((incident) => (
+        {userIncidents?.data?.map((incident: any) => (
           <Card key={incident.id} className="rounded-lg mb-4 shadow-lg gap-3">
             <CardHeader>
-              <CardTitle className="text-xl">{ISSUE_TYPES[incident?.issue_type]?.label}</CardTitle>
+              <CardTitle className="text-xl">
+                {ISSUE_TYPES[incident?.issue_type]?.label || incident?.issue_type}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <img
