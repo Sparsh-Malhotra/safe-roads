@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import {
   AlertCircle,
   GraduationCap,
-  MapPin,
+  MapIcon,
   Menu,
   UserCircle2,
   X,
@@ -25,10 +25,8 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
       )}
     >
       <div className="flex items-center space-x-2">
-        <MapPin className="h-5 w-5 text-primary" strokeWidth={2.5} />
-        <h1 className="text-lg font-semibold tracking-tight">
-          Roads Untraveled
-        </h1>
+        <MapIcon className="h-5 w-5 text-primary" strokeWidth={2.5} />
+        <h1 className="text-lg font-semibold tracking-tight">Safe Roads</h1>
       </div>
 
       <Menu

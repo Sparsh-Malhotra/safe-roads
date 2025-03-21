@@ -1,19 +1,18 @@
 import { Marker, Popup } from "react-leaflet";
-import { Icon } from "leaflet";
+import L from "leaflet";
+import "leaflet.awesome-markers";
 
 const Incidents = ({ reports, visible }) => {
     if (!visible || !reports.length) return null;
-    
-    console.log(visible, reports);
-  
-  const createIssueIcon = () => {
-    return new Icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/512/7801/7801913.png",
-        iconSize: [24, 36],
-        iconAnchor: [3, 36],
-        popupAnchor: [10, -36],
-    });
-  };
+
+    const createIssueIcon = () => {
+        return L.AwesomeMarkers.icon({
+            icon: "exclamation-triangle",
+            prefix: "fa",
+            markerColor: "red",
+            iconColor: "white",
+        });
+    };
 
     return (
         <>

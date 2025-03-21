@@ -19,7 +19,7 @@ Icon.Default.mergeOptions({
 
 let globalMapRef: L.Map | null = null;
 
-const Map = ({ className, showIssues = true }) => {
+const Map = ({ className, showIssues = false }) => {
     const [userLocation, setUserLocation] = useState<[number, number] | null>(
         null
     );
@@ -27,9 +27,7 @@ const Map = ({ className, showIssues = true }) => {
   
   const {
     data: incidents,
-    isLoading,
-    isError,
-    error
+    isError
   } = useIncidents();
 
     useEffect(() => {
