@@ -14,6 +14,19 @@ const fetchIncidents = async () => {
     return response.json();
 };
 
+const fetchIncidentsByUser = async () => {
+    const response = await fetch(`${API_BASE_URL}/${GET_INCIDENTS_BY_USER}`, {
+        headers: {
+            "Authorization": `Bearer ${getAuthToken()}`
+        }
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch user incidents");
+    }
+    return response.json();
+};
+
+
 const userLogin = async (credentials) => {
     const response = await fetch(`${API_BASE_URL}/${USER_LOGIN}`, {
         method: "POST",

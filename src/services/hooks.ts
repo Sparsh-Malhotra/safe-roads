@@ -1,4 +1,4 @@
-import { INCIDENTS_QUERY_KEY } from "@/constants/query-keys";
+import { INCIDENTS_QUERY_KEY, USER_INCIDENTS_QUERY_KEY } from "@/constants/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchIncidents, userLogin, submitIncident } from ".";
 import { toast } from "sonner";
@@ -8,6 +8,15 @@ export function useIncidents() {
     return useQuery({
         queryKey: [INCIDENTS_QUERY_KEY],
         queryFn: fetchIncidents,
+        staleTime: 30 * 1000, // 30 seconds
+        gcTime: 5 * 60 * 1000, // 5 minutes
+    });
+}
+
+export function useIncidentsByUser() {
+    return useQuery({
+        queryKey: [USER_INCIDENTS_QUERY_KEY],
+        queryFn: fetchIncidentsByUser,
         staleTime: 30 * 1000, // 30 seconds
         gcTime: 5 * 60 * 1000, // 5 minutes
     });

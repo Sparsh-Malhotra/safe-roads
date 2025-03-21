@@ -20,6 +20,7 @@ const Incidents = ({ reports, visible }) => {
                 <Marker
                     key={report.id}
                     position={[report.location_lat, report.location_lng]}
+                    // @ts-expect-error todo
                     icon={createIssueIcon()}
                 >
                     <Popup>

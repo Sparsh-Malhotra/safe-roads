@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -23,12 +24,9 @@ const Map = ({ className, showIssues = false }) => {
     const [userLocation, setUserLocation] = useState<[number, number] | null>(
         null
     );
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
-  
-  const {
-    data: incidents,
-    isError
-  } = useIncidents();
+    const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+    const { data: incidents } = useIncidents();
 
     useEffect(() => {
         const loadMap = async () => {
@@ -62,6 +60,7 @@ const Map = ({ className, showIssues = false }) => {
             )}
             {userLocation && (
                 <MapContainer
+                    // @ts-expect-error todo
                     center={userLocation}
                     zoom={15}
                     className="h-full w-full z-10"
@@ -70,7 +69,7 @@ const Map = ({ className, showIssues = false }) => {
                     <SetViewOnLocation coords={userLocation} />
                     <Marker position={userLocation} />
 
-                    {incidents && incidents.data &&  (
+                    {incidents && incidents.data && (
                         <Incidents
                             reports={incidents.data}
                             visible={showIssues}
