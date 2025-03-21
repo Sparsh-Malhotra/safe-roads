@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import 'leaflet.awesome-markers/dist/leaflet.awesome-markers.css';
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
