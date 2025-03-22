@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 const Incentive = () => {
     const [openHelp, setOpenHelp] = React.useState(false);
 
-    const { conversion_factor = "" } = JSON.parse(
+    const { conversionFactor = "" } = JSON.parse(
         localStorage.getItem("tenant_data") || "{}"
     );
   
@@ -47,7 +47,7 @@ const Incentive = () => {
                                 <div className="flex items-center">
                                     <IndianRupee className="h-5 w-5 text-amber-500 mr-2" />
                                     <span className="text-sm font-medium">
-                                        1 Coin = {conversion_factor} INR
+                                        1 Coin = {conversionFactor} INR
                                     </span>
                                 </div>
                                 <Popover>
