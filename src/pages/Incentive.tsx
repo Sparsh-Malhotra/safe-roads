@@ -68,7 +68,7 @@ const Incentive = () => {
                                             <p className="text-sm text-gray-600">
                                                 Coins earned can be redeemed for
                                                 their INR value in your next
-                                                salary payout at the rate of 0.8
+                                                salary payout at the rate of {conversionFactor}
                                                 INR per coin.
                                             </p>
                                         </div>
