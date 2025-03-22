@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { MapIcon, UserIcon, LockIcon } from "lucide-react";
+import { UserIcon, LockIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@/services/hooks";
+import logo from '../assets/safe-roads.png';
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -29,10 +30,10 @@ const Login = () => {
                 )}
             >
                 <div className="flex flex-col items-center space-y-2 mb-8">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-2">
-                        <MapIcon
-                            className="h-8 w-8 text-primary"
-                            strokeWidth={2}
+                    <div className="flex h-16 w-16 items-center justify-center mb-2">
+                        <img
+                            src={logo}
+                            className="h-12 w-12 text-primary"
                         />
                     </div>
                     <h1 className="text-2xl font-bold tracking-tight">
