@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useGLTF, Html } from '@react-three/drei'
 import gsap from 'gsap'
 import { useThree } from '@react-three/fiber'
+import { useNavigate } from 'react-router'
 
 const POPUP_TEXT = {
   0: 'As you have spotted a pothole.',
@@ -12,6 +13,7 @@ const POPUP_TEXT = {
 }
 
 export default function Model1(props) {
+  const navigate = useNavigate();
   const groupRef = useRef()
   const { camera } = useThree()
   const { nodes, materials } = useGLTF('/mustang.glb')
@@ -50,8 +52,11 @@ export default function Model1(props) {
     if (typeof props.setIndex === "function") {
       props.setIndex((prevIndex) => prevIndex + 1); 
     }
-  
     setShowPopup(false); 
+    if(props.index === 2)
+    {
+      navigate("/home");
+    }
   };
   
   
@@ -110,7 +115,7 @@ export default function Model1(props) {
                 e.target.style.transform = 'translateY(0)';
               }}
             >
-              Ok
+              {props.index === 2 ? "Go Home" : "Ok"}
             </button>
           </div>
         </Html>

@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import Model1 from './Model1';
 import Model2 from './Model2';
 
-const MovingCar = ({ position = [1.5, -0.1, 25] }) => {
+const MovingCar = ({ position = [1.5, -0.1, 25],...props }) => {
 
   return (
     <RigidBody
@@ -18,7 +18,7 @@ const MovingCar = ({ position = [1.5, -0.1, 25] }) => {
       type="fixed"
     >
       <PerspectiveCamera makeDefault fov={60} position={[0, 3, 12]} />
-      <Model1 position={[1.0, 0.1, 5]}/>
+      <Model1 position={[1.0, 0.1, 5]} {...props}/>
     </RigidBody>
   );
 };
@@ -305,7 +305,7 @@ const Road = () => {
 
 
 
-const Scene = () => {
+const Scene = (props) => {
   return (
     <Canvas shadows  frameloop="always">
 <Sky 
@@ -324,7 +324,7 @@ const Scene = () => {
       
       <Physics gravity={[0, -9.8, 0]} >
         <Road />
-        <MovingCar position={[0.2, -0.1, 25]} />
+        <MovingCar position={[0.2, -0.1, 25]} {...props}/>
     
         <StationaryCar position={[-2, -0.1, -15]} />
       </Physics>
@@ -386,6 +386,6 @@ const Scene = () => {
   );
 };
 
-export default function CarScene3() {
-  return <Scene />;
+export default function CarScene3(props) {
+  return <Scene {...props}/>;
 }
