@@ -7,7 +7,8 @@ import {
   Menu,
   User2,
   ChevronRight,
-  LogOut
+  LogOut,
+  Coins
 } from "lucide-react";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useNavigate } from "react-router";
@@ -19,7 +20,11 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [open, setOpen] = useState(false);
-  const { name, email } = JSON.parse(localStorage.getItem("user_data") || "{}");
+  const {
+      name,
+      email,
+      coins = 0,
+  } = JSON.parse(localStorage.getItem("user_data") || "{}");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -83,6 +88,17 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   <p className="text-white/80 text-sm mt-0.5">
                     {email || "User"}
                   </p>
+
+                  <div 
+                    className="flex items-center gap-1.5 mt-2 bg-white/20 rounded-full px-3 py-1 cursor-pointer hover:bg-white/30 transition-colors"
+                    onClick={() => {
+                      navigate("/incentive");
+                      setOpen(false);
+                    }}
+                  >
+                    <Coins className="h-3.5 w-3.5 text-yellow-300" />
+                    <span className="text-white text-sm font-medium">{coins} coins</span>
+                  </div>
                 </div>
               </div>
             </div>
