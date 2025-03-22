@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "./baseService";
 import {
+    FETCH_COINS,
     FETCH_ROUTES,
     GET_INCIDENTS,
     GET_INCIDENTS_BY_USER,
@@ -115,4 +116,26 @@ export const fetchRoutes = async (
     }
 };
 
-export { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser };
+const fetchCoins = async () => {
+    const response = await fetch(`${API_BASE_URL}/${FETCH_COINS}`, {
+        headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+        },
+    });
+    if (!response.ok) {
+        throw new Error("Failed to fetch incidents");
+    }
+    const { coins } = await response.json();
+
+    localStorage.setItem("coins", coins);
+
+    return coins;
+};
+
+export {
+    fetchIncidents,
+    userLogin,
+    submitIncident,
+    fetchIncidentsByUser,
+    fetchCoins,
+};

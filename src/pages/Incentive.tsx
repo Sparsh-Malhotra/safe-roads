@@ -29,9 +29,7 @@ const Incentive = () => {
         localStorage.getItem("tenant_data") || "{}"
     );
   
-    const { coins = 0 } = JSON.parse(
-        localStorage.getItem("user_data") || "{}"
-    );
+    const coins = localStorage.getItem("coins");
 
     return (
         <div className="min-h-screen bg-gray-50">
