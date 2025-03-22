@@ -5,10 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@/services/hooks";
 import logo from '../assets/safe-roads.png';
+import { getAuthToken } from "@/utils/auth";
+import { Navigate } from "react-router";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const authToken = getAuthToken();
 
     const { mutate: login, isPending, error } = useLogin("/home");
 
@@ -20,6 +24,10 @@ const Login = () => {
             password,
         });
     };
+
+    if (authToken) {
+        return <Navigate to='/home' />;
+    }
 
     return (
         <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-b from-background/30 to-background p-4">
