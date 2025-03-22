@@ -1,6 +1,6 @@
-import { INCIDENTS_QUERY_KEY, USER_INCIDENTS_QUERY_KEY } from "@/constants/query-keys";
+import { INCIDENTS_QUERY_KEY, USER_COINS_KEY, USER_INCIDENTS_QUERY_KEY } from "@/constants/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser, fetchRoutes } from ".";
+import { fetchIncidents, userLogin, submitIncident, fetchIncidentsByUser, fetchRoutes, fetchCoins } from ".";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 
@@ -45,9 +45,12 @@ export function useLogin(redirectTo?: string) {
 }
 
 export function useSubmitIncident() {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: (formData:FormData) => submitIncident(formData),
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: [USER_COINS_KEY] });
             toast.success(data.message || "Issue submit successful");
         },
         onError: (error: Error) => {
@@ -70,4 +73,23 @@ export const useRoutes = () => {
         endLng: number;
       }) => fetchRoutes(startLat, startLng, endLat, endLng),
     });
-  };
+};
+  
+export function useUserCoins() {
+    const queryClient = useQueryClient();
+    
+    const coinsQuery = useQuery({
+        queryKey: [USER_COINS_KEY],
+        queryFn: fetchCoins,
+    });
+    
+    // Function to refetch coins data
+    const refetchCoins = () => {
+        return queryClient.invalidateQueries({ queryKey: [USER_COINS_KEY] });
+    };
+    
+    return {
+        ...coinsQuery,
+        refetchCoins
+    };
+}
