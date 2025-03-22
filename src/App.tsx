@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedComponent";
 import Incentive from "./pages/Incentive";
+import Learn from "./pages/Learn";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,8 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/incentive" element={<Incentive />} />
+            <Route path="/learn" element={<Learn />} />
+
           </Route>
           
           <Route path="*" element={<NotFound />} />
