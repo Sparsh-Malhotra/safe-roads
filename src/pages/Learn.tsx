@@ -1,9 +1,9 @@
-import React, { Suspense, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, Stage } from '@react-three/drei';
-import CarScene from '@/components/CarScene';
-import CrossroadScene from '@/components/CarScene2';
-import CarScene3 from '@/components/CarScene3';
+import { useState,Suspense, lazy } from 'react';
+import Header from '@/components/Header';
+
+const CarScene = lazy(() => import('@/components/CarScene'));
+const CrossroadScene = lazy(() => import('@/components/CarScene2'));
+const CarScene3 = lazy(() => import('@/components/CarScene3'));
 
 
 const SCENES = [
@@ -30,11 +30,11 @@ export default function Learn() {
   const Component = SCENES[index].Component;
 
   return (
+    <div className="relative h-screen w-full overflow-hidden">
+      <Header/>
     <div className="w-screen h-screen">
-    <Component 
-      index={index}
-      setIndex={setIndex}
-    />
+          <Component index={index} setIndex={setIndex} />
+    </div>
   </div>
     // <Canvas
     //   camera={{ position: [5, 2, 10], fov: 45 }}

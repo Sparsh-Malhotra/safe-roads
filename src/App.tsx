@@ -7,9 +7,9 @@ import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedComponent";
 import { Suspense, lazy } from "react";
 import Loading from "./components/Loading";
+import Learn from "./pages/Learn";
 
 const Incentive = lazy(() => import("./pages/Incentive"));
-const Learn = lazy(() => import("./pages/Learn"));
 const Reports = lazy(() => import("./pages/Reports"));
 
 const queryClient = new QueryClient({
@@ -50,9 +50,7 @@ function App() {
                       <Route
                           path="/learn"
                           element={
-                              <Suspense fallback={<Loading />}>
                                   <Learn />
-                              </Suspense>
                           }
                       />
                   </Route>
