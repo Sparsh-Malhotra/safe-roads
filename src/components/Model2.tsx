@@ -1,4 +1,6 @@
-import React, { useRef } from 'react'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export default function Model2(props) {

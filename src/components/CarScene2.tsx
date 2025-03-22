@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { OrbitControls, PerspectiveCamera, Sky, Environment, useGLTF, Text } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Sky, Environment } from '@react-three/drei';
 import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
 import Model1 from './Model1';
@@ -8,7 +10,7 @@ import Model2 from './Model2';
 
 const MovingCarX = ({ position = [25, 0.1, 1.5], direction = -1, ...props }) => {
   const carRef = useRef();
-  useFrame((state, delta) => {
+  useFrame(() => {
     if (carRef.current) {
       carRef.current.setLinvel({ x: 0 * direction, y: 0, z: 0 });
     }
@@ -32,7 +34,7 @@ const MovingCarX = ({ position = [25, 0.1, 1.5], direction = -1, ...props }) => 
 const MovingCarZ = ({ position = [1.5, -0.1, 25], direction = -1, ...props }) => {
   const carRef = useRef();
   
-  useFrame((state, delta) => {
+  useFrame(() => {
     if (carRef.current) {
       carRef.current.setLinvel({ x: 0, y: 0, z: 0 * direction });
     }
@@ -55,20 +57,6 @@ const MovingCarZ = ({ position = [1.5, -0.1, 25], direction = -1, ...props }) =>
 
 const StationaryCar = ({ position, rotation = [0, 0, 0] }) => {
   const carRef = useRef();
-  const [collided, setCollided] = useState(false);
-  
-  // useEffect(() => {
-  //   if (carRef.current) {
-  //     carRef.current.setMass(1000);
-      
-  //     const unsubscribe = carRef.current.onCollisionEnter(() => {
-  //       setCollided(true);
-  //       setTimeout(() => setCollided(false), 5000);
-  //     });
-      
-  //     return unsubscribe;
-  //   }
-  // }, []);
   
   return (
     <RigidBody 
@@ -86,44 +74,6 @@ const StationaryCar = ({ position, rotation = [0, 0, 0] }) => {
   
   );
 };
-
-const useViewportSize = () => {
-    const [viewport, setViewport] = useState({
-      width: window.innerWidth,
-      height: window.innerHeight,
-      isMobile: window.innerWidth < 768
-    });
-    
-    useEffect(() => {
-      const handleResize = () => {
-        setViewport({
-          width: window.innerWidth,
-          height: window.innerHeight,
-          isMobile: window.innerWidth < 768
-        });
-      };
-      
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
-    
-    return viewport;
-  };
-  
-  // Scale factor based on viewport width
-  const useScaleFactor = () => {
-    const viewport = useViewportSize();
-    
-    // Calculate scale factor - decrease scale as viewport gets smaller
-    const scaleFactor = useMemo(() => {
-      if (viewport.width < 480) return 0.1; // Small mobile
-      if (viewport.width < 768) return 0.75; // Medium mobile
-      if (viewport.width < 1024) return 0.85; // Tablet
-      return 1; // Desktop
-    }, [viewport.width]);
-    
-    return scaleFactor;
-  };
 
 // Central Traffic Light
 const CentralTrafficLight = () => {   

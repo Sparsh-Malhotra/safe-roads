@@ -182,6 +182,8 @@ const Map = ({ className, showIssues = false }) => {
             {userLocation && (
                 <MapContainer
                     // @ts-expect-error todo
+                    zoomControl={false}
+                    attributionControl={false}
                     center={userLocation}
                     zoom={15}
                     className="h-full w-full z-10"

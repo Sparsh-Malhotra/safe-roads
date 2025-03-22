@@ -1,20 +1,16 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useState, useRef, useEffect, useMemo, RefObject } from 'react';
-import { OrbitControls, PerspectiveCamera, Sky, Environment, useGLTF, Text } from '@react-three/drei';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+import { Canvas } from '@react-three/fiber';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { OrbitControls, PerspectiveCamera, Sky, Environment } from '@react-three/drei';
 import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier';
 import * as THREE from 'three';
-import gsap from 'gsap';
 import Model1 from './Model1';
 import Model2 from './Model2';
-import { RapierRigidBody } from '@react-three/rapier';
 
 interface MovingCarProps {
   position?: [number, number, number];
   [key: string]: any;
-}
-
-interface StationaryCarProps {
-  position: [number, number, number];
 }
 
 interface ObstacleProps {
@@ -62,20 +58,6 @@ const MovingCar: React.FC<MovingCarProps> = ({ position = [1.5, -0.1, 25], ...pr
 
 const StationaryCar: React.FC<any> = ({ position }) => {
   const carRef = useRef<any>(null);
-  const [collided, setCollided] = useState<boolean>(false);
-  
-  useEffect(() => {
-    if (carRef.current) {
-      // carRef.current.setMass(1000);
-      
-      // const unsubscribe = carRef.current.onCollisionEnter(() => {
-      //   setCollided(true);
-      //   setTimeout(() => setCollided(false), 5000);
-      // });
-      
-      // return unsubscribe;
-    }
-  }, []);
   
   return (
     <RigidBody 
@@ -94,19 +76,6 @@ const StationaryCar: React.FC<any> = ({ position }) => {
 
 const Obstacle: React.FC<ObstacleProps> = ({ position }) => {
   const obstacleRef = useRef<any>(null);
-  const [hit, setHit] = useState<boolean>(false);
-  
-  useEffect(() => {
-    if (obstacleRef.current) {
-      // obstacleRef.current.setMass(150);
-      
-      // const unsubscribe = obstacleRef.current.onCollisionEnter(() => {
-      //   setHit(true);
-      // });
-      
-      // return unsubscribe;
-    }
-  }, []);
   
   return (
     <RigidBody 

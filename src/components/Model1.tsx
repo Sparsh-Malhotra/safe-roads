@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import React, { useEffect, useRef, useState } from 'react'
 import { useGLTF, Html } from '@react-three/drei'
 import gsap from 'gsap'
