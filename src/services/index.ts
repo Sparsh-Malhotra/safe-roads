@@ -61,6 +61,8 @@ const userLogin = async (credentials) => {
         localStorage.setItem("auth_token", data.data.accessToken);
 
         localStorage.setItem("user_data", JSON.stringify(data.data.user));
+
+        localStorage.setItem("tenant_data",JSON.stringify(data.data.tenant))
     }
 
     return data;

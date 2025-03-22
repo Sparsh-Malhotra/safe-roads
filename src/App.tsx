@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Login from "./pages/Login";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedComponent";
+import Incentive from "./pages/Incentive";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/incentive" element={<Incentive />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />
