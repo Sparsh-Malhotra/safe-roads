@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import ReportButton from "@/components/ReportButton";
 import { useState } from "react";
 import IssueReportModal from "@/components/IssueReportModal";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const Home = () => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -34,6 +35,7 @@ const Home = () => {
         onToggle={toggleIssuesVisibility}
         className="absolute top-20 left-4 z-20"
       />
+      <PWAInstallPrompt />
     </div>
   );
 };
