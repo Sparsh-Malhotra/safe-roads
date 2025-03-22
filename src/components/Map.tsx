@@ -79,18 +79,29 @@ const Map = ({ className, showIssues = false }) => {
             allWaypoints.push(`${step.end_location.lat},${step.end_location.lng}`);
         }
         
-        let waypoints = allWaypoints;
-        if (allWaypoints.length > 10) {
-            const waypointCount = 10;
-            waypoints = [];
+        const strategicWaypoints = [];
+        
+        if (allWaypoints.length > 0) {
+            // One near the source (about 20% into the route)
+            const sourceIndex = Math.floor(allWaypoints.length * 0.2);
+            if (sourceIndex < allWaypoints.length) {
+                strategicWaypoints.push(allWaypoints[sourceIndex]);
+            }
             
-            for (let i = 0; i < waypointCount; i++) {
-                const index = Math.floor((i * allWaypoints.length) / waypointCount);
-                waypoints.push(allWaypoints[index]);
+            // One in the middle (about 50% into the route)
+            const middleIndex = Math.floor(allWaypoints.length * 0.5);
+            if (middleIndex < allWaypoints.length && middleIndex !== sourceIndex) {
+                strategicWaypoints.push(allWaypoints[middleIndex]);
+            }
+            
+            // One near the destination (about 80% into the route)
+            const destIndex = Math.floor(allWaypoints.length * 0.8);
+            if (destIndex < allWaypoints.length && destIndex !== middleIndex) {
+                strategicWaypoints.push(allWaypoints[destIndex]);
             }
         }
         
-        const waypointsString = waypoints.join('|');
+        const waypointsString = strategicWaypoints.join('|');
         
         // Build Google Maps URL
         let mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
