@@ -48,7 +48,7 @@ const Map = ({ className, showIssues = false }) => {
                 setUserLocation([latitude, longitude]);
             } catch (error) {
                 console.error("Failed to get location:", error);
-                setUserLocation([37.7749, -122.4194]); // San Francisco
+                setUserLocation([28.4411349, 77.0391218]);
             } finally {
                 setIsMapLoaded(true);
             }
